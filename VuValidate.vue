@@ -1,3 +1,8 @@
+<!--
+    vu-validate --
+
+    Copyright (c) SenseDeep. All Rights Reserved.
+-->
 <template>
     <v-card v-if="errors.length" outlined class="validate">
         <v-card-text>
@@ -23,7 +28,7 @@ const Rules = {
     ],
     cloud: [
         v => !!v || 'Missing cloud name',
-        v => /^[^<>~`!@#$%^&\*(){}\[\]|\\\/:;,?=+]+$/.test(v) || 'Bad format for cloud name',
+        v => /^[^~`!@#$%^&\*(){}\[\]|\\\/:;,?=+]+$/.test(v) || 'Bad format for cloud name',
     ],
     domain: [
         v => !!v || 'Missing domain',
@@ -41,9 +46,14 @@ const Rules = {
         v => !!v || 'Missing IPv6 address',
         v => /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(v) || 'Bad format for IPv6 address',
     ],
+    ipv6prefix: [
+        v => !!v || 'Missing IPv6 prefix length',
+        v => /^[0-9]*/.test(v) || 'Bad format for IPv6 prefix length',
+        v => (1 <= +v && +v < 129) || 'Bad format for IPv6 prefix length (out of range)',
+    ],
     log: [
         v => !!v || 'Missing log name',
-        v => /^[a-zA-Z0-9_\-/\.]+/.test(v) || 'Bad format for log name',
+        v => /^[^<>~`!@#$%^&\*(){}\[\]|\\\/:;,?=+]*:.*:[A-Z0-9_\-/\.]+$/i || 'Bad format for log name',
     ],
     name: [
         v => !!v || 'Missing name',
@@ -74,7 +84,7 @@ const Rules = {
     ],
     view: [
         v => !!v || 'Missing view name',
-        v => /^[\w \-\_\/]+$/.test(v) || 'Bad format for view name',
+        v => /^[\w \-\_\/\[\]:]+$/.test(v) || 'Bad format for view name',
     ],
 }
 
@@ -199,16 +209,17 @@ export default VuValidate
 <style lang="scss" scoped>
 .validate {
     background-color: var(--v-error-base) !important;
+    margin-bottom: 10px;
+    padding: 10px;
     color: white !important;
     border-radius: 0 !important;
-    padding-bottom: 14px;
-}
-h3 {
-    color: white;
-    padding-bottom: 10px;
-}
-li {
-    color: white;
-    font-size: 12px;
+    h3 {
+        color: white;
+        padding-bottom: 10px;
+    }
+    li {
+        color: white;
+        font-size: 12px;
+    }
 }
 </style>
